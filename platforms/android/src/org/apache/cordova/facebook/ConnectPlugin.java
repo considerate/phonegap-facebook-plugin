@@ -466,10 +466,14 @@ public class ConnectPlugin extends CordovaPlugin {
 				public void onCompleted(GraphUser user, Response response) {
 					// Create a new result with response data
 					if (loginContext != null) {
-						GraphObject graphObject = response.getGraphObject();
-						Log.d(TAG, "returning login object " + graphObject.getInnerJSONObject().toString());
-						userID = user.getId();
-						loginContext.success(getResponse());
+						if (response.getError() != null) {
+							loginContext.error(response.getError().getErrorMessage());
+						} else {
+							GraphObject graphObject = response.getGraphObject();
+							Log.d(TAG, "returning login object " + graphObject.getInnerJSONObject().toString());
+							userID = user.getId();
+							loginContext.success(getResponse());
+						}
 						loginContext = null;
 					}
 				}
